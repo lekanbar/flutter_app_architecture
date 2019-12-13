@@ -1,0 +1,10 @@
+{
+  "flutter_app_architecture": "Flutter App Architecture",
+  "enter_user_name": "Enter Github Username",
+  "error_user_name": "Please enter a valid username",
+  "bio": "Bio",
+  "search": "Search",
+  "vanilla": "Vanilla",
+  "scoped_model": "Scoped Model",
+  "bloc": "BLoC"
+}
