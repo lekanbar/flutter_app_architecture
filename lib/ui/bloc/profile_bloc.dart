@@ -11,12 +11,12 @@ class ProfileBloc {
 
   final _profileStreamController = StreamController<ProfileState>();
 
-  Stream<ProfileState> get user => _profileStreamController.stream;
+  Stream<ProfileState> get profileStream => _profileStreamController.stream;
 
   void loadGithubProfile() {
-    _profileStreamController.sink.add(ProfileState._userLoading());
+    _profileStreamController.sink.add(ProfileState._profileLoading());
     _repository.getGitHubProfile(_userName).then((profile) {
-      _profileStreamController.sink.add(ProfileState._userData(profile));
+      _profileStreamController.sink.add(ProfileState._profileData(profile));
     });
   }
 
@@ -28,8 +28,8 @@ class ProfileBloc {
 class ProfileState {
   ProfileState();
 
-  factory ProfileState._userData(Profile profile) = ProfileDataState;
-  factory ProfileState._userLoading() = ProfileLoadingState;
+  factory ProfileState._profileData(Profile profile) = ProfileDataState;
+  factory ProfileState._profileLoading() = ProfileLoadingState;
 }
 
 class ProfileLoadingState extends ProfileState {}

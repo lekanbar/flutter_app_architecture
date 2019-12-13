@@ -15,12 +15,12 @@ class BlocArchitectureScreen extends StatefulWidget {
 }
 
 class _BlocArchitectureScreenState extends State<BlocArchitectureScreen> {
-  ProfileBloc _userBloc;
+  ProfileBloc _profileBloc;
 
   @override
   void initState() {
-    _userBloc = ProfileBloc(widget._userName, widget._repository);
-    _userBloc.loadGithubProfile();
+    _profileBloc = ProfileBloc(widget._userName, widget._repository);
+    _profileBloc.loadGithubProfile();
     super.initState();
   }
 
@@ -32,7 +32,7 @@ class _BlocArchitectureScreenState extends State<BlocArchitectureScreen> {
       ),
       body: SafeArea(
         child: StreamBuilder<ProfileState>(
-          stream: _userBloc.user,
+          stream: _profileBloc.profileStream,
           initialData: ProfileLoadingState(),
           builder: (context, snapshot) {
             if (snapshot.data is ProfileDataState) {
@@ -49,7 +49,7 @@ class _BlocArchitectureScreenState extends State<BlocArchitectureScreen> {
 
   @override
   void dispose() {
-    _userBloc.dispose();
+    _profileBloc.dispose();
     super.dispose();
   }
 }
