@@ -6,6 +6,7 @@ import 'package:flutter_app_architecture/ui/shared/dimensions.dart';
 import 'package:flutter_app_architecture/ui/vanilla/vanilla_screen.dart';
 
 import 'data/repository.dart';
+import 'ui/shared/widgets/az_notification.dart';
 
 class ArchitectureApp extends StatelessWidget {
   @override
@@ -40,78 +41,102 @@ class _HomePageScreenState extends State<HomePage> {
   int selectedArchitectureType = 0;
 
   @override
+  void initState() {
+    _textEditingController.addListener(_textChangeListener);
+    super.initState();
+  }
+
+  void _textChangeListener() {
+    if(_textEditingController.text.isNotEmpty)
+      setState(() {
+        error = null;
+      });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(S.current.flutter_app_architecture)
-      ),
+      appBar: AppBar(title: Text(S.current.flutter_app_architecture)),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Dimensions.n16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              TextField(
-                controller: _textEditingController,
-                decoration: InputDecoration(
-                  hintText: S.current.enter_user_name,
-                  contentPadding: EdgeInsets.only(
-                      left: Dimensions.n4,
-                      right: Dimensions.n4,
-                      bottom: Dimensions.n4,
-                      top: Dimensions.n15),
-                  errorText: error,
+        child: Stack(children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Dimensions.n16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                TextField(
+                  controller: _textEditingController,
+                  decoration: InputDecoration(
+                    hintText: S.current.enter_user_name,
+                    contentPadding: EdgeInsets.only(
+                        left: Dimensions.n4,
+                        right: Dimensions.n4,
+                        bottom: Dimensions.n4,
+                        top: Dimensions.n15),
+                  ),
                 ),
-              ),
-              Column(
-                children: <Widget>[
-                  RadioListTile(
-                    title: Text(
-                      S.current.vanilla,
-                      style: new TextStyle(fontSize: 16.0),
+                Column(
+                  children: <Widget>[
+                    RadioListTile(
+                      title: Text(
+                        S.current.vanilla,
+                        style: new TextStyle(fontSize: 16.0),
+                      ),
+                      value: 0,
+                      groupValue: selectedArchitectureType,
+                      onChanged: (value) {
+                        _handleRadioValueChange(value);
+                      },
                     ),
-                    value: 0,
-                    groupValue: selectedArchitectureType,
-                    onChanged: (value) {
-                      _handleRadioValueChange(value);
-                    },
-                  ),
-                  RadioListTile(
-                    title: Text(
-                      S.current.bloc,
-                      style: new TextStyle(fontSize: 16.0),
+                    RadioListTile(
+                      title: Text(
+                        S.current.bloc,
+                        style: new TextStyle(fontSize: 16.0),
+                      ),
+                      value: 1,
+                      groupValue: selectedArchitectureType,
+                      onChanged: (value) {
+                        _handleRadioValueChange(value);
+                      },
                     ),
-                    value: 1,
-                    groupValue: selectedArchitectureType,
-                    onChanged: (value) {
-                      _handleRadioValueChange(value);
-                    },
-                  ),
-                  RadioListTile(
-                    title: Text(
-                      S.current.scoped_model,
-                      style: new TextStyle(fontSize: 16.0),
+                    RadioListTile(
+                      title: Text(
+                        S.current.scoped_model,
+                        style: new TextStyle(fontSize: 16.0),
+                      ),
+                      value: 2,
+                      groupValue: selectedArchitectureType,
+                      onChanged: (value) {
+                        _handleRadioValueChange(value);
+                      },
                     ),
-                    value: 2,
-                    groupValue: selectedArchitectureType,
-                    onChanged: (value) {
-                      _handleRadioValueChange(value);
-                    },
-                  ),
-                ],
-              ),
-              RaisedButton(
-                child: Text(
-                  S.current.search,
+                  ],
                 ),
-                onPressed: () {
-                  if (!validateField()) openArchitectureType(context);
-                },
-              ),
-            ],
+                RaisedButton(
+                  child: Text(
+                    S.current.search,
+                  ),
+                  onPressed: () {
+                    if (!validateField()) openArchitectureType(context);
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
+          AZNotification(
+            isActive: error != null,
+            child: Text(error == null ? "" : error, style: TextStyle(fontSize: 16.0, color: Colors.white)),
+            maxHeight: 50,
+            borderRadius: 0,
+            status: NotificationStatus.error,
+            completion: () {
+              setState(() {
+                error = null;
+              });
+            },
+          )
+        ]),
       ),
     );
   }
